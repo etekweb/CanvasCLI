@@ -6,7 +6,6 @@ import os.path
 from os import path, system, name
 import requests
 from getpass import getpass
-#import json
 
 authFilePath = os.path.join(os.path.dirname(__file__), 'auth')
 
@@ -62,6 +61,7 @@ for i, course in enumerate(courses.json(), start=0):
         print(str(i) + ": " + course['name'])
 courseIndex = int(input("\nSelect Course Number: "))
 courseID = courses.json()[courseIndex]['id']
+# TODO - remember last class, store as default in auth file
 
 # Get Assignments for Course
 assignments = requests.get(baseURL + '/api/v1/courses/' + str(courseID) + '/assignments/?per_page=100', auth=(BearerAuth(token)))
@@ -75,4 +75,4 @@ assignmentID = assignments.json()[assignmentIndex]['id']
 # TODO - Get file to upload from parameters
 # TODO - Upload to Canvas -- see https://canvas.instructure.com/doc/api/file.file_uploads.html
 #  - requires getting presigned URL from Canvas endpoint
-# TODO - Error handling and checking of all sections
+# TODO - Error handling and input checking of all sections
