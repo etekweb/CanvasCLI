@@ -56,6 +56,8 @@ courses = requests.get(baseURL + '/api/v1/courses?enrollment_state="active"&per_
 clear()
 # TODO - if 401 returned, ask for credentials again.
 #print(courses.json()[1])
-for course in courses.json():
+for i, course in enumerate(courses.json(), start=0):
     if 'id' in course and 'name' in course:
-        print(str(course['id']) + ": " + course['name'])
+        print(str(i) + ": " + course['name'])
+courseIndex = int(input("\nSelect Course Number: "))
+print(courses.json()[courseIndex]['id'])
