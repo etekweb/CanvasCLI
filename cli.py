@@ -8,6 +8,8 @@ import requests
 from getpass import getpass
 
 authFilePath = os.path.join(os.path.dirname(__file__), 'auth')
+token = ""
+root = ""
 
 # Prepares auth token for HTTP requests
 class BearerAuth(requests.auth.AuthBase):
@@ -26,9 +28,29 @@ def clear():
     else: 
         _ = system('clear') 
 
+# Function to set up new auth file
+# Sets token and auth to be user inputs
+def setUp():
+    print("You will need to obtain a Canvas access token.")
+    print("This acts as your Canvas password, so keep it safe!\n")
+    print("To get this, log into Canvas online, go to Account -> Settings, \nscroll to Approved Integrations, and press New Access Token.")
+    print("For now, set the token to never expire.\n")
+    print("Once you have your token, copy and paste it into this window.")
+    global token
+    token = getpass("Token: ")
+#   storeOkay = input("Would you like to save this key for future use? (Y/n)")
+    print("What is your Canvas root? To find this, fill in the blank with what your school's URL has: https://_____.instructure.com")
+    global root
+    root = input("Canvas root: ")
+#   if(storeOkay == "" or storeOkay.upper() == "Y"):
+    with open(authFilePath, 'w') as store:
+        store.write(token+'\n')
+        store.write(root)
+
+# SCRIPT STARTS HERE
 # Login: Check if an access token and Canvas URL Root are saved. 
-# If it is, import those settings.
-# If not, prompt user to input their access token
+# If it is, import those settings to define token and auth.
+# If not, run set up function.
 clear()
 print("Welcome to CanvasCLI. \nThis program will allow you to submit assignments directly in Linux shell.\n")
 if(path.exists(authFilePath)):
@@ -36,21 +58,12 @@ if(path.exists(authFilePath)):
         token = auth.readline().rstrip()
         root = auth.readline()
 else:
-    print("You will need to obtain a Canvas access token.")
-    print("This acts as your Canvas password, so keep it safe!\n")
-    print("To get this, log into Canvas online, go to Account -> Settings, \nscroll to Approved Integrations, and press New Access Token.")
-    print("For now, set the token to never expire.\n")
-    print("Once you have your token, copy and paste it into this window.")
-    token = getpass("Token: ")
-#   storeOkay = input("Would you like to save this key for future use? (Y/n)")
-    print("What is your Canvas root? To find this, fill in the blank with what your school's URL has: https://_____.instructure.com")
-    root = input("Canvas root: ")
-#   if(storeOkay == "" or storeOkay.upper() == "Y"):
-    with open(authFilePath, 'w') as store:
-        store.write(token+'\n')
-        store.write(root)
-print("Logging into Canvas...")
+    setUp()
 
+# Logging in, token and auth should now be defined
+print("Logging into Canvas...")
+print(token)
+print(root)
 # Get Courses
 baseURL = 'https://' + root + '.instructure.com'
 courses = requests.get(baseURL + '/api/v1/courses?enrollment_state="active"&per_page=100', auth=(BearerAuth(token)))
