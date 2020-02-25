@@ -71,6 +71,7 @@ for i, assignment in enumerate(assignments.json(), start=0):
     print(str(i) + ": " + assignment['name'])
 assignmentIndex = int(input("\nSelect Assignment Number: "))
 assignmentID = assignments.json()[assignmentIndex]['id']
+# TODO - separate upcoming and/or unsubmitted assignments, set next due to default
 
 # TODO - Get file to upload from parameters
 # TODO - Upload to Canvas -- see https://canvas.instructure.com/doc/api/file.file_uploads.html
