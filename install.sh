@@ -7,6 +7,7 @@ read answer
 if [ "$answer" != "${answer#[Yy]}" ] ;then
     mkdir ~/.canvas
     cp cli.py ~/.canvas/cli.py
+    pip3 install requests
     alias canvas='python3 ~/.canvas/cli.py'
     echo >> ~/.bashrc
     echo "alias canvas='python3 ~/.canvas/cli.py'" >> ~/.bashrc
