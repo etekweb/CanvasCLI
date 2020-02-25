@@ -62,8 +62,7 @@ else:
 
 # Logging in, token and auth should now be defined
 print("Logging into Canvas...")
-print(token)
-print(root)
+
 # Get Courses
 baseURL = 'https://' + root + '.instructure.com'
 courses = requests.get(baseURL + '/api/v1/courses?enrollment_state="active"&per_page=100', auth=(BearerAuth(token)))
