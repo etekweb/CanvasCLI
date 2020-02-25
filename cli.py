@@ -27,7 +27,7 @@ def clear():
     else: 
         _ = system('clear') 
 
-# Entry Point: Check if an access token and Canvas URL Root are saved. 
+# Login: Check if an access token and Canvas URL Root are saved. 
 # If it is, import those settings.
 # If not, prompt user to input their access token
 clear()
@@ -51,13 +51,28 @@ else:
         store.write(token+'\n')
         store.write(root)
 print("Logging into Canvas...")
+
+# Get Courses
 baseURL = 'https://' + root + '.instructure.com'
 courses = requests.get(baseURL + '/api/v1/courses?enrollment_state="active"&per_page=100', auth=(BearerAuth(token)))
 clear()
 # TODO - if 401 returned, ask for credentials again.
-#print(courses.json()[1])
 for i, course in enumerate(courses.json(), start=0):
     if 'id' in course and 'name' in course:
         print(str(i) + ": " + course['name'])
 courseIndex = int(input("\nSelect Course Number: "))
-print(courses.json()[courseIndex]['id'])
+courseID = courses.json()[courseIndex]['id']
+
+# Get Assignments for Course
+assignments = requests.get(baseURL + '/api/v1/courses/' + str(courseID) + '/assignments/?per_page=100', auth=(BearerAuth(token)))
+clear()
+# TODO - handle error cases
+for i, assignment in enumerate(assignments.json(), start=0):
+    print(str(i) + ": " + assignment['name'])
+assignmentIndex = int(input("\nSelect Assignment Number: "))
+assignmentID = assignments.json()[assignmentIndex]['id']
+
+# TODO - Get file to upload from parameters
+# TODO - Upload to Canvas -- see https://canvas.instructure.com/doc/api/file.file_uploads.html
+#  - requires getting presigned URL from Canvas endpoint
+# TODO - Error handling and checking of all sections
