@@ -5,6 +5,7 @@
 import os.path
 from os import path, system, name
 import requests
+from getpass import getpass
 #import json
 
 authFilePath = os.path.join(os.path.dirname(__file__), 'auth')
@@ -41,7 +42,7 @@ else:
     print("To get this, log into Canvas online, go to Account -> Settings, \nscroll to Approved Integrations, and press New Access Token.")
     print("For now, set the token to never expire.\n")
     print("Once you have your token, copy and paste it into this window.")
-    token = input("Token: ")
+    token = getpass("Token: ")
 #   storeOkay = input("Would you like to save this key for future use? (Y/n)")
     print("What is your Canvas root? To find this, fill in the blank with what your school's URL has: https://_____.instructure.com")
     root = input("Canvas root: ")
