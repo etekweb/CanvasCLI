@@ -6,6 +6,7 @@ import os.path
 from os import path, system, name
 import requests
 from getpass import getpass
+import sys
 
 authFilePath = os.path.join(os.path.dirname(__file__), 'auth')
 token = ""
@@ -47,6 +48,18 @@ def setUp():
         store.write(token+'\n')
         store.write(root)
 
+def submitFileUpload(apiurl, course, assn, file, filename):
+    # print(apiurl, course, assn, file)
+    preuploadRes = requests.post(apiurl + '/api/v1/courses/' + str(course) + '/assignments/' + str(assn) + '/submissions/self/files', data={'name': filename}, auth=(BearerAuth(token)))
+    params = preuploadRes.json()['upload_params']
+    uploadRes = requests.post(preuploadRes.json()['upload_url'], files={'file': file}, data=params)
+    verifyRes = requests.get(uploadRes.json()['location'], auth=(BearerAuth(token)))
+    submitParams = {'submission': {'submission_type': 'online_upload', 'file_ids': [uploadRes.json()['id']]}}
+    submitRes = requests.post(apiurl + '/api/v1/courses/' + str(course) + '/assignments/' + str(assn) + '/submissions', json=submitParams, auth=(BearerAuth(token)))
+    print(submitRes.status_code)
+    if(submitRes.status_code > 199 and submitRes.status_code < 300):
+        print('Uploaded and submitted successfully.')
+
 # SCRIPT STARTS HERE
 # Login: Check if an access token and Canvas URL Root are saved. 
 # If it is, import those settings to define token and auth.
@@ -79,10 +92,30 @@ courseID = courses.json()[courseIndex]['id']
 assignments = requests.get(baseURL + '/api/v1/courses/' + str(courseID) + '/assignments/?per_page=100', auth=(BearerAuth(token)))
 clear()
 # TODO - handle error cases
+numOfSubmittableAssignments = 0
 for i, assignment in enumerate(assignments.json(), start=0):
-    print(str(i) + ": " + assignment['name'])
+    if('online_upload' in assignments.json()[i]['submission_types']):
+        print(str(i) + ": " + assignment['name'])
+        numOfSubmittableAssignments = numOfSubmittableAssignments + 1
+if(numOfSubmittableAssignments == 0):
+    print("There are no submittable assignments for this course.")
+    quit()
 assignmentIndex = int(input("\nSelect Assignment Number: "))
 assignmentID = assignments.json()[assignmentIndex]['id']
+
+if('online_upload' in assignments.json()[assignmentIndex]['submission_types']):
+    if(len(sys.argv) > 1):        
+        try:
+            file = open(sys.argv[1], mode='rb').read()
+            filename = open(sys.argv[1]).name
+            submitFileUpload(baseURL, courseID, assignmentID, file, filename)
+        except IOError:
+            print("File specified in command line was not found: " + sys.argv[1])
+    else:
+        print("A file was not specified to submit. Ending here.")
+else:
+    print("You cannot submit to this assignment.")
+    
 # TODO - separate upcoming and/or unsubmitted assignments, set next due to default
 
 # TODO - Get file to upload from parameters
