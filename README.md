@@ -5,7 +5,7 @@ Allows user to submit an assignment to Canvas using the command line.
 
 ## Installation Instructions
 1. Clone repo to machine: `git clone https://github.com/etekweb/CanvasCLI.git`
-2. Run the installer in current context: `cd CanvasCLI && . install.sh` (installer currently for macOS/Linux only)
+2. Run the installer in current context: `. CanvasCLI/install.sh`
 3. Use `canvas` command to start setup
 
 ## Setup
