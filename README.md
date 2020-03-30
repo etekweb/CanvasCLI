@@ -1,11 +1,11 @@
 # CanvasCLI
 Allows user to submit an assignment to Canvas using the command line.
 
-***Currently in development.*** Cannot submit assignments at this point.
+***Currently in development.***
 
 ## Installation Instructions
 1. Clone repo to machine: `git clone https://github.com/etekweb/CanvasCLI.git`
-2. Run the installer in current context: `. install.sh` (installer currently for macOS/Linux only)
+2. Run the installer in current context: `. CanvasCLI/install.sh`
 3. Use `canvas` command to start setup
 
 ## Setup
@@ -22,8 +22,11 @@ For example, if you visit https://mtu.instructure.com to log in normally, type `
 1. Run `canvas <filepath-to-upload>`
 2. Set up with access token and Canvas domain if not done yet
 3. Select class number from given list
-4. Select assignment number from given list
-5. (tbd)
+4. Select assignment number from given list (only assignments with uploadable sections will appear)
+5. Assignment will upload from there. An error code will be returned if the upload fails.
 
 ## Todo
-A lot.
+- Improve code structure, error handling
+- Show only open assignments
+- Default to last-used class and nearest-due assignment
+- Add features to access other Canvas components (agenda, assignment description, grades, etc.)
