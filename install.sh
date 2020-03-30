@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "${BASH_SOURCE%/*}" || exit
 echo "Welcome to CanvasCLI Installer."
 echo "This will allow you to submit assignments directly in Linux shell."
 echo "An alias will be made, 'canvas', to use the CLI."
@@ -17,3 +18,5 @@ if [ "$answer" != "${answer#[Yy]}" ] ;then
 else
     echo Goodbye
 fi
+cd $OLDPWD
+
