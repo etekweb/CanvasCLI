@@ -6,7 +6,7 @@ echo -n "Install now? (y/n) "
 read answer
 if [ "$answer" != "${answer#[Yy]}" ] ;then
     mkdir ~/.canvas
-    cp cli.py ~/.canvas/cli.py
+    cp "$(dirname -- $0)/cli.py" ~/.canvas/cli.py
     pip3 install requests
     alias canvas='python3 ~/.canvas/cli.py'
     echo >> ~/.bashrc
